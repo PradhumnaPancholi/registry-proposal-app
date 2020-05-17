@@ -1,7 +1,4 @@
-# Registry Proposal <img align="right" src="https://github.com/1Hive/website/blob/master/website/static/img/bee.png" height="80px" />
-
-[![CircleCI](https://circleci.com/gh/1Hive/token-request-app.svg?style=svg)](https://circleci.com/gh/1Hive/token-request-app)
-[![Coverage Status](https://coveralls.io/repos/github/1Hive/token-request-app/badge.svg?branch=master&service=github)](https://coveralls.io/github/1Hive/token-request-app?branch=master&service=github)
+# Registry Proposal 
 
 The Research Collective's Registry Proposal app allows users to create a vote which (will) request an Organization's NFT token
  in exchange for stake and a resource proposal (vendor info/research publication). 
@@ -11,7 +8,7 @@ The request would require a vote to approve, if the vote is rejected the user wo
 the vote passes the stake would be converted into rDAI held in escrow until the listing is removed, with the interest 
 payments directed to the DAO's vault and the scientist issued a NFT as payment.
 
-#### 🚨 Security review status: [Contracts audited](https://diligence.consensys.net/audits/2019/12/dandelion-organizations/)
+#### 🚨 Security review status: Not audited
 
 ## How does it work
 

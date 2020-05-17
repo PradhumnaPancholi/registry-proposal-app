@@ -2,7 +2,7 @@
   "name": "Registry Proposal",
   "description": "Requests an Organization's tokens in exchange for payment",
   "details_url": "/meta/details.md",
-  "source_url": "https://github.com/1Hive/token-request-app/",
+  "source_url": "https://github.com/ResearchCollective/registry-proposal-app",
   "icons": [
     {
       "src": "/meta/icon.svg",
