@@ -1,3 +1,8 @@
+### Pretext
+
+This code is being utilized to allow users to post items for curation by expert DAO. 
+
+
 # Token Request <img align="right" src="https://github.com/1Hive/website/blob/master/website/static/img/bee.png" height="80px" />
 
 [![CircleCI](https://circleci.com/gh/1Hive/token-request-app.svg?style=svg)](https://circleci.com/gh/1Hive/token-request-app)
