@@ -51,7 +51,7 @@ const initialState = {
   orgToken: [],
 }
 
-const NewRequest = React.memo(({ panelOpened, acceptedTokens, onRequest, connectedAccount }) => {
+const NewProposal = React.memo(({ panelOpened, acceptedTokens, onRequest, connectedAccount }) => {
   const { token } = useAppState()
   const network = useNetwork()
   const api = useApi()
@@ -104,7 +104,7 @@ const NewRequest = React.memo(({ panelOpened, acceptedTokens, onRequest, connect
         }))
       }
       setDepositedAmount({ ...initialState.amount })
-      setRequestedAmount('')
+      setRequestedAmount('0')
       setReference(initialState.reference)
     }
   }, [panelOpened])
@@ -275,21 +275,8 @@ const NewRequest = React.memo(({ panelOpened, acceptedTokens, onRequest, connect
         margin-top: ${3 * GU}px;
       `}
     >
-      <Field label='Requested amount' required>
-        <CombinedInput>
-          <TextInput.Number
-            value={requestedAmount}
-            onChange={handleRequestedAmountUpdate}
-            min={0}
-            step='any'
-            required
-            wide
-          />
-          <TokenSelector activeIndex={0} onChange={() => {}} tokens={orgToken} disabled />
-        </CombinedInput>
-      </Field>
 
-      <Field label='Offered amount' required>
+      <Field label='Staked amount' required>
         <CombinedInput>
           <TextInput.Number
             value={depositedAmount.value}
@@ -312,12 +299,12 @@ const NewRequest = React.memo(({ panelOpened, acceptedTokens, onRequest, connect
           {tokenBalanceMessage}
         </Text>
       </TokenBalance>
-      <Field label='Reference (optional)'>
+      <Field label='Proposal Explanation'>
         <TextInput onChange={handleReferenceUpdate} value={reference} wide />
       </Field>
       <ButtonWrapper>
         <Button wide mode='strong' type='submit' disabled={submitButtonDisabled}>
-          Create request
+          Create proposal
         </Button>
       </ButtonWrapper>
       {depositErrorMessage && <ValidationError message={depositErrorMessage} />}
@@ -329,8 +316,8 @@ const NewRequest = React.memo(({ panelOpened, acceptedTokens, onRequest, connect
           </p>
         )}
         <p>
-          Configure your request above, and sign the transaction with your wallet after clicking “Create request”. It
-          will then show up in your Token request app once processed. It will need to be submitted by someone with
+          Configure your request above, and sign the transaction with your wallet after clicking “Create proposal”. It
+          will then show up in your Registry Proposal app once processed. It will need to be submitted by someone with
           permission to create proposals, you will be able to withdraw your funds from the request at any time before
           the proposal is approved.
         </p>
@@ -341,7 +328,7 @@ const NewRequest = React.memo(({ panelOpened, acceptedTokens, onRequest, connect
                 margin-top: ${1 * GU}px;
               `}
             >
-              Tokens may require a pretransaction to approve the Token request app for your deposit.{' '}
+              Tokens may require a pretransaction to approve the Registry Proposal app for your deposit.{' '}
               <Link href={TOKEN_ALLOWANCE_WEBSITE} target='_blank'>
                 Find out why.
               </Link>{' '}
@@ -409,6 +396,6 @@ const ValidationError = ({ message }) => {
 export default props => {
   const { api, connectedAccount, network } = useAragonApi()
   return network && api ? (
-    <NewRequest api={api} connectedAccount={connectedAccount} network={network} {...props} />
+    <NewProposal api={api} connectedAccount={connectedAccount} network={network} {...props} />
   ) : null
 }

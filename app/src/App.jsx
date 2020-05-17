@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { useAragonApi, useGuiStyle } from '@aragon/api-react'
 import { Main, SidePanel, SyncIndicator, Tabs, Header, GU } from '@aragon/ui'
-import NewRequest from './components/Panels/NewRequest'
+import NewProposal from './components/Panels/NewProposal'
 import { useAppLogic } from './hooks/app-hooks'
 import requestIcon from './assets/icono.svg'
 import { ETHER_TOKEN_FAKE_ADDRESS } from './lib/token-utils'
@@ -43,7 +43,7 @@ const App = () => {
         // The actual gas cost is around ~180k + 20k per 32 chars of text + 80k per period
         // transition but we do the estimation with some breathing room in case it is being
         // forwarded (unlikely in deposit).
-        gas: 400000 + 20000 * Math.ceil(requestedAmount.length / 32) + 80000 * 1,
+        gas: 400000 + 20000 * Math.ceil(100 / 32) + 80000 * 1,
       }
     }
     // Don't care about response1`
@@ -66,11 +66,11 @@ const App = () => {
     <Main theme={appearance}>
       <SyncIndicator visible={isSyncing} />
       <Header
-        primary='Token Request'
+        primary='Registry Proposal'
         secondary={
           !selectedRequest && (
             <MainButton
-              label='New Request'
+              label='New Proposal'
               onClick={panelState.requestOpen}
               icon={<img src={requestIcon} height='30px' alt='' />}
             />
@@ -104,16 +104,16 @@ const App = () => {
       </>
 
       <SidePanel
-        title='New request'
+        title='New Proposal'
         opened={panelState.visible}
         onClose={panelState.requestClose}
         onTransitionEnd={panelState.endTransition}
       >
-        <NewRequest
+        <NewProposal
           panelOpened={panelState.opened}
           acceptedTokens={acceptedTokens}
           onRequest={handleRequest}
-        ></NewRequest>
+        ></NewProposal>
       </SidePanel>
     </Main>
   )

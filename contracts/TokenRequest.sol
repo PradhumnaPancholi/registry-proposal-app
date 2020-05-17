@@ -13,7 +13,7 @@ import "./lib/AddressArrayLib.sol";
 * A user can then request tokens by calling createTokenRequest() to deposit funds and then calling finaliseTokenRequest()
 * which will be called via the forwarder if forwarding is successful, minting the user tokens.
 */
-contract TokenRequest is AragonApp {
+contract RegistryProposal is AragonApp {
 
     using SafeERC20 for ERC20;
     using UintArrayLib for uint256[];
@@ -36,15 +36,15 @@ contract TokenRequest is AragonApp {
     string private constant ERROR_TOKEN_TRANSFER_REVERTED = "TOKEN_REQUEST_TOKEN_TRANSFER_REVERTED";
     string private constant ERROR_NO_REQUEST = "TOKEN_REQUEST_NO_REQUEST";
 
-    uint256 public constant MAX_ACCEPTED_DEPOSIT_TOKENS = 100;
+    uint256 public constant MAX_ACCEPTED_DEPOSIT_TOKENS = 1;
 
-    enum Status { Pending, Refunded, Finalised }
+    enum Status {Pending, Refunded, Finalised }
 
-    struct TokenRequest {
+    struct RegistryProposal {
         address requesterAddress;
         address depositToken;
         uint256 depositAmount;
-        uint256 requestAmount;
+//        uint256 requestAmount;
         Status status;
     }
 
@@ -54,15 +54,15 @@ contract TokenRequest is AragonApp {
     address[] public acceptedDepositTokens;
 
     uint256 public nextTokenRequestId;
-    mapping(uint256 => TokenRequest) public tokenRequests; // ID => TokenRequest
+    mapping(uint256 => RegistryProposal) public tokenRequests; // ID => TokenRequest
 
     event SetTokenManager(address tokenManager);
     event SetVault(address vault);
     event TokenAdded(address indexed token);
     event TokenRemoved(address indexed token);
-    event TokenRequestCreated(uint256 requestId, address requesterAddress, address depositToken, uint256 depositAmount, uint256 requestAmount, string reference);
+    event TokenRequestCreated(uint256 requestId, address requesterAddress, address depositToken, uint256 depositAmount, string reference);
     event TokenRequestRefunded(uint256 requestId, address refundToAddress, address refundToken, uint256 refundAmount);
-    event TokenRequestFinalised(uint256 requestId, address requester, address depositToken, uint256 depositAmount, uint256 requestAmount);
+    event TokenRequestFinalised(uint256 requestId, address requester, address depositToken, uint256 depositAmount);
 
     modifier tokenRequestExists(uint256 _tokenRequestId) {
         require(_tokenRequestId < nextTokenRequestId, ERROR_NO_REQUEST);
@@ -147,7 +147,6 @@ contract TokenRequest is AragonApp {
     * @notice Create a token request depositing `@tokenAmount(_depositToken, _depositAmount, true)` in exchange for `@tokenAmount(self.getToken(): address, _requestAmount, true)`
     * @param _depositToken Address of the token being deposited
     * @param _depositAmount Amount of the token being deposited
-    * @param _requestAmount Amount of the token being requested
     * @param _reference String detailing request reason
     */
     function createTokenRequest(address _depositToken, uint256 _depositAmount, uint256 _requestAmount, string _reference)
@@ -166,9 +165,9 @@ contract TokenRequest is AragonApp {
         uint256 tokenRequestId = nextTokenRequestId;
         nextTokenRequestId++;
 
-        tokenRequests[tokenRequestId] = TokenRequest(msg.sender, _depositToken, _depositAmount, _requestAmount, Status.Pending);
+        tokenRequests[tokenRequestId] = RegistryProposal(msg.sender, _depositToken, _depositAmount, Status.Pending);
 
-        emit TokenRequestCreated(tokenRequestId, msg.sender, _depositToken, _depositAmount, _requestAmount, _reference);
+        emit TokenRequestCreated(tokenRequestId, msg.sender, _depositToken, _depositAmount, _reference);
 
         return tokenRequestId;
     }
@@ -178,7 +177,7 @@ contract TokenRequest is AragonApp {
     * @param _tokenRequestId ID of the Token Request
     */
     function refundTokenRequest(uint256 _tokenRequestId) external nonReentrant tokenRequestExists(_tokenRequestId) {
-        TokenRequest storage tokenRequest = tokenRequests[_tokenRequestId];
+        RegistryProposal storage tokenRequest = tokenRequests[_tokenRequestId];
         require(tokenRequest.requesterAddress == msg.sender, ERROR_NOT_OWNER);
         require(tokenRequest.status == Status.Pending, ERROR_NOT_PENDING);
 
@@ -212,7 +211,7 @@ contract TokenRequest is AragonApp {
         tokenRequestExists(_tokenRequestId)
         auth(FINALISE_TOKEN_REQUEST_ROLE)
     {
-        TokenRequest storage tokenRequest = tokenRequests[_tokenRequestId];
+        RegistryProposal storage tokenRequest = tokenRequests[_tokenRequestId];
         require(tokenRequest.status == Status.Pending, ERROR_NOT_PENDING);
 
         tokenRequest.status = Status.Finalised;
@@ -220,7 +219,7 @@ contract TokenRequest is AragonApp {
         address requesterAddress = tokenRequest.requesterAddress;
         address depositToken = tokenRequest.depositToken;
         uint256 depositAmount = tokenRequest.depositAmount;
-        uint256 requestAmount = tokenRequest.requestAmount;
+//        uint256 requestAmount = tokenRequest.requestAmount;
 
         if (depositAmount > 0) {
             if (depositToken == ETH) {
@@ -231,9 +230,9 @@ contract TokenRequest is AragonApp {
             }
         }
 
-        tokenManager.mint(requesterAddress, requestAmount);
+//        tokenManager.mint(requesterAddress, requestAmount);
 
-        emit TokenRequestFinalised(_tokenRequestId, requesterAddress, depositToken, depositAmount, requestAmount);
+        emit TokenRequestFinalised(_tokenRequestId, requesterAddress, depositToken, depositAmount);
     }
 
     function getAcceptedDepositTokens() public view returns (address[]) {
@@ -244,16 +243,16 @@ contract TokenRequest is AragonApp {
     returns (
         address requesterAddress,
         address depositToken,
-        uint256 depositAmount,
-        uint256 requestAmount
+        uint256 depositAmount
+//        uint256 requestAmount
     )
     {
-        TokenRequest storage tokenRequest = tokenRequests[_tokenRequestId];
+        RegistryProposal storage tokenRequest = tokenRequests[_tokenRequestId];
 
         requesterAddress = tokenRequest.requesterAddress;
         depositToken = tokenRequest.depositToken;
         depositAmount = tokenRequest.depositAmount;
-        requestAmount = tokenRequest.requestAmount;
+//        requestAmount = tokenRequest.requestAmount;
     }
 
     /**

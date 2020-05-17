@@ -24,7 +24,7 @@
   "environments": {
     "default": {
       "network": "development",
-      "appName": "token-request.open.aragonpm.eth"
+      "appName": "registry-proposal.aragonpm.eth"
     },
     "staging": {
       "registry": "0xfe03625ea880a8cba336f9b5ad6e15b0a3b5a939",

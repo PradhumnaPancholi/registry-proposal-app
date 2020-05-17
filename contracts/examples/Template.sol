@@ -84,14 +84,14 @@ contract Template is TemplateBase {
         ACL acl = ACL(dao.acl());
         acl.createPermission(this, dao, dao.APP_MANAGER_ROLE(), this);
 
-        bytes32 tokenRequestAppId = keccak256(abi.encodePacked(apmNamehash("open"), keccak256("token-request")));
+        bytes32 tokenRequestAppId = apmNamehash("registry-proposal");
         bytes32 votingAppId = apmNamehash("voting");
         bytes32 tokenManagerAppId = apmNamehash("token-manager");
         bytes32 vaultAppId = apmNamehash("vault");
 
 
         Vault vault = Vault(dao.newAppInstance(vaultAppId, latestVersionAppBase(vaultAppId),new bytes(0),true));
-        TokenRequest tokenRequest = TokenRequest(dao.newAppInstance(tokenRequestAppId, latestVersionAppBase(tokenRequestAppId)));
+        RegistryProposal tokenRequest = RegistryProposal(dao.newAppInstance(tokenRequestAppId, latestVersionAppBase(tokenRequestAppId)));
         Voting voting = Voting(dao.newAppInstance(votingAppId, latestVersionAppBase(votingAppId)));
         TokenManager tokenManager = TokenManager(dao.newAppInstance(tokenManagerAppId, latestVersionAppBase(tokenManagerAppId)));
 
@@ -135,7 +135,7 @@ contract Template is TemplateBase {
         emit DeployDao(dao);
     }
 
-    function initApps(Vault vault, TokenManager tokenManager, TokenRequest tokenRequest, Voting voting, MiniMeToken token, MiniMeToken testToken) internal {
+    function initApps(Vault vault, TokenManager tokenManager, RegistryProposal tokenRequest, Voting voting, MiniMeToken token, MiniMeToken testToken) internal {
         vault.initialize();
         tokenManager.initialize(token, true, 0);
         address[] memory tokenList = new address[](2);
@@ -145,7 +145,7 @@ contract Template is TemplateBase {
         voting.initialize(token, 50 * PCT, 20 * PCT, 1 days);
     }
 
-    function createTokenForUser(address root, MiniMeTokenFactory tokenFactory, TokenRequest tokenRequest, MiniMeToken testToken) internal {
+    function createTokenForUser(address root, MiniMeTokenFactory tokenFactory, RegistryProposal tokenRequest, MiniMeToken testToken) internal {
         testToken.generateTokens(root, 300e18);
         testToken.changeController(root);
     }
